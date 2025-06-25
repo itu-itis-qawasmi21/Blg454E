@@ -1,0 +1,101 @@
+--- Random seeds set for reproducibility ---
+
+--- Phase 1: Data Loading and Preprocessing ---
+Shape of x_train_normal (only digit '1'): (6742, 28, 28, 1)
+Shape of x_test_final (combined normal and anomaly): (10000, 28, 28, 1)
+Number of normal samples in test set: 1135
+Number of anomaly samples in test set: 8865
+
+--- Phase 2: Deep SVDD Model Development and Training ---
+
+--- Feature Extractor (CNN) Architecture Summary ---
+Model: "sequential_5"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ conv2d_10 (Conv2D)              │ (None, 26, 26, 32)     │           320 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling2d_10 (MaxPooling2D) │ (None, 13, 13, 32)     │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv2d_11 (Conv2D)              │ (None, 11, 11, 64)     │        18,496 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling2d_11 (MaxPooling2D) │ (None, 5, 5, 64)       │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ flatten_5 (Flatten)             │ (None, 1600)           │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_5 (Dense)                 │ (None, 128)            │       204,928 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 223,744 (874.00 KB)
+ Trainable params: 223,744 (874.00 KB)
+ Non-trainable params: 0 (0.00 B)
+ 
+--- Initializing Center 'c' using 10 batches of normal data ---
+Center 'c' initialized. Shape: (128,)
+
+--- Starting Deep SVDD Training ---
+Epoch 1/50, Loss: 0.0659
+Epoch 2/50, Loss: 0.0328
+Epoch 3/50, Loss: 0.0226
+Epoch 4/50, Loss: 0.0174
+Epoch 5/50, Loss: 0.0141
+Epoch 6/50, Loss: 0.0118
+Epoch 7/50, Loss: 0.0101
+Epoch 8/50, Loss: 0.0087
+Epoch 9/50, Loss: 0.0076
+Epoch 10/50, Loss: 0.0067
+Epoch 11/50, Loss: 0.0060
+Epoch 12/50, Loss: 0.0054
+Epoch 13/50, Loss: 0.0049
+Epoch 14/50, Loss: 0.0044
+Epoch 15/50, Loss: 0.0041
+Epoch 16/50, Loss: 0.0037
+Epoch 17/50, Loss: 0.0035
+Epoch 18/50, Loss: 0.0032
+Epoch 19/50, Loss: 0.0030
+Epoch 20/50, Loss: 0.0028
+Epoch 21/50, Loss: 0.0027
+Epoch 22/50, Loss: 0.0025
+Epoch 23/50, Loss: 0.0024
+Epoch 24/50, Loss: 0.0023
+Epoch 25/50, Loss: 0.0022
+Epoch 26/50, Loss: 0.0021
+Epoch 27/50, Loss: 0.0020
+Epoch 28/50, Loss: 0.0019
+Early stopping triggered: Average epoch loss 0.0019 is below threshold 0.0020
+--- Deep SVDD Training Complete ---
+
+--- Phase 3: Deep SVDD Anomaly Scoring and Evaluation ---
+Calculated anomaly scores for 10000 test samples.
+Min Deep SVDD anomaly score (test): 0.0006
+Max Deep SVDD anomaly score (test): 0.0244
+Mean Deep SVDD anomaly score (test): 0.0072
+Median Deep SVDD anomaly score (test): 0.0072
+
+Deep SVDD ROC AUC Score: 0.9975
+
+--- Calculating Deep SVDD Threshold from Normal Training Data Only ---
+Min Deep SVDD anomaly score (normal train): 0.0005
+Max Deep SVDD anomaly score (normal train): 0.0130
+Deep SVDD Threshold (99th percentile of NORMAL TRAINING scores): 0.0053
+
+Deep SVDD Classification Metrics (using threshold 0.0053 from normal training data):
+  Accuracy: 0.8715
+  Precision: 0.9993
+  Recall: 0.8556
+  F1-Score: 0.9219
+
+--- Phase 4: Comparison with Traditional Methods ---
+
+Shape of flattened training data for traditional methods: (6742, 784)
+Shape of flattened test data for traditional methods: (10000, 784)
+
+--- Training and Evaluating One-Class SVM ---
+One-Class SVM ROC AUC Score: 0.9971
+
+--- Training and Evaluating Isolation Forest ---
+Isolation Forest ROC AUC Score: 0.9929
+
+--- Anomaly Detection Performance Comparison (ROC AUC) ---
+Deep SVDD (Custom CNN):         0.9975
+One-Class SVM:                  0.9971
+Isolation Forest:               0.9929
